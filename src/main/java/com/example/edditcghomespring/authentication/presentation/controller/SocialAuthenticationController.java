@@ -41,7 +41,7 @@ public class SocialAuthenticationController {
         if (userInfo.getEmail() == null || userInfo.getEmail().isBlank()) {
             throw new IllegalStateException("Kakao에서 이메일 정보를 가져올 수 없습니다.");
         }
-        
+
         boolean isSignedUp = accountProfileUseCase.isSignedUp(userInfo.getEmail());
         System.out.println("가입 여부: " + (isSignedUp ? "기존 회원" : "신규 회원"));
 
