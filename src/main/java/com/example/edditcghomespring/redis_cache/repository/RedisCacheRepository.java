@@ -1,8 +1,8 @@
-package com.example.edditcghomespring.redis_cache.service;
+package com.example.edditcghomespring.redis_cache.repository;
 
 import java.time.Duration;
 
-public interface RedisCacheService {
+public interface RedisCacheRepository {
 
     /**
      * key-value 저장
@@ -17,12 +17,12 @@ public interface RedisCacheService {
     /**
      * key 기반 value 조회
      */
-    <T> T getValueByKey(String key, Class<T> clazz);
+    String getValueByKey(String key);
 
     /**
      * key 존재 여부 확인
      */
-    boolean isRefreshTokenExists(String key);
+    boolean exists(String key);
 
     /**
      * key 삭제
