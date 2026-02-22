@@ -5,6 +5,8 @@ import com.example.edditcghomespring.authentication.application.SocialAuthentica
 import com.example.edditcghomespring.authentication.application.response.KakaoAccessTokenResponse;
 import com.example.edditcghomespring.authentication.application.response.KakaoUserInfoResult;
 import com.example.edditcghomespring.authentication.application.response.OAuthLinkResult;
+import com.example.edditcghomespring.authentication.application.response.SocialLoginResult;
+import com.example.edditcghomespring.authentication.domain.vo.SocialProviderType;
 import com.example.edditcghomespring.authentication.presentation.dto.request.OAuthLinkRequestForm;
 import com.example.edditcghomespring.authentication.presentation.dto.response.OAuthLinkResponseForm;
 import lombok.RequiredArgsConstructor;
@@ -32,24 +34,16 @@ public class SocialAuthenticationController {
     }
 
     @GetMapping("/request-access-token-after-redirection")
-    public ResponseEntity<KakaoAccessTokenResponse> requestAccessToken(
+    public ResponseEntity<SocialLoginResult> requestAccessToken(
             @RequestParam String code
     ) {
-        KakaoAccessTokenResponse tokenResponse = authenticationUseCase.requestKakaoAccessToken(code);
-        KakaoUserInfoResult userInfo = authenticationUseCase.requestKakaoUserInfo(tokenResponse.getAccessToken());
+        SocialLoginResult result =
+                authenticationUseCase.loginAfterRedirect(
+                        SocialProviderType.KAKAO,
+                        code
+                );
 
-        if (userInfo.getEmail() == null || userInfo.getEmail().isBlank()) {
-            throw new IllegalStateException("Kakao에서 이메일 정보를 가져올 수 없습니다.");
-        }
-
-        boolean isSignedUp = accountProfileUseCase.isSignedUp(userInfo.getEmail());
-        System.out.println("가입 여부: " + (isSignedUp ? "기존 회원" : "신규 회원"));
-
-        System.out.println("ID: " + userInfo.getId());
-        System.out.println("Nickname: " + userInfo.getNickname());
-        System.out.println("Email: " + userInfo.getEmail());
-
-        return ResponseEntity.ok(tokenResponse);
+        return ResponseEntity.ok(result);
     }
 
 }

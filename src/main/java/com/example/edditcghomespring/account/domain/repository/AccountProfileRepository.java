@@ -5,6 +5,8 @@ import com.example.edditcghomespring.account.domain.vo.Email;
 
 import java.util.Optional;
 
+
 public interface AccountProfileRepository {
+    boolean existsByEmail(Email email);
     Optional<AccountProfile> findByEmail(Email email);
 }
